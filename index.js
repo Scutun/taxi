@@ -3,24 +3,14 @@ require('dotenv').config()
 const express =  require('express')
 const app = express()
 const cors = require('cors')
-const http = require('http')
-const server = http.createServer(app)
-const { Server } = require("socket.io")
-const io = new Server(server, {
-    cors: {
-        origin: '*',
-    }
-})
+const passengerRoute = require('./routes/passenger.routes')
 
+app.use(express.json())
+const port = process.env.port || 3000
 app.use(cors())
+app.use('/api', passengerRoute)
 
-io.on('connection', (socket) => {
-    console.log('a user connected')
-    socket.on('disconnect', () => {
-        console.log('user disconnested')
-    })
-})
 
-server.listen(3000, () => {
+app.listen(port, () => {
     console.log('Server work')
 })
