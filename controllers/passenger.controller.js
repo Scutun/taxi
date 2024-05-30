@@ -67,6 +67,11 @@ class passengerController{
     async updatePassenger(req, res){
         try{
             const {surname, firstName, secondName, id} = req.body
+
+            const info = await db.query(`select * from passengers where id_passengers = $1`, [id])
+
+            if (info.rows.length === 0) throw new Error
+
             const passenger = await db.query(`update passengers set passenger_surname = $1, passenger_firstname = $2, 
             passenger_secondname = $3 where id_passengers = $4 returning *`, [surname, firstName, secondName, id])
 
