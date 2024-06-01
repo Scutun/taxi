@@ -4,7 +4,7 @@ const passengerController = require('../controllers/passenger.controller')
 
 
 router.post('/passenger/create', passengerController.createPassenger)
-router.get('/passenger/logIn', passengerController.logPassenger)
+router.post('/passenger/logIn', passengerController.logPassenger)
 router.put('/passenger/update', passengerController.updatePassenger)
 
 router.delete('/passenger/delete/:id', passengerController.deletePassenger)

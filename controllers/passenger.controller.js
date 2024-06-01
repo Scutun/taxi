@@ -7,11 +7,10 @@ class passengerController{
 
     async createPassenger(req, res) {
         try {
-            const {surname, firstName, secondName, email, password} = req.body
+            const {firstName, email, password} = req.body
             const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-            const newPassenger = await db.query(`INSERT INTO passengers (passenger_surname, passenger_firstname, 
-                passenger_secondname, passenger_email, password) values ($1, $2, $3, $4, $5) 
-                RETURNING id_passengers`, [surname, firstName, secondName, email, hash])
+            const newPassenger = await db.query(`INSERT INTO passengers (passenger_firstname, 
+                passenger_email, password) values ($1, $2, $3) RETURNING id_passengers`, [firstName, email, hash])
 
             res.json(newPassenger.rows[0])
         }
@@ -39,10 +38,12 @@ class passengerController{
 
     async getPassengerFromDrive(req, res){
         try{
-            const id = await db.query(`select * 
-            from drive where id_drive = '${req.params.driveId}'`)
+            const id = await db.query(`select id_passengers_fk 
+            from drive where id_drive = '${req.params.id}'`)
             const passenger = await db.query(`select passenger_surname, passenger_firstname, passenger_secondname
             from passengers where id_passengers = '${id.rows[0].id_passengers_fk}'`)
+
+            res.json(passenger.rows[0])
         }
         catch(e){
             res.sendStatus(404)
