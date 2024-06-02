@@ -14,7 +14,7 @@ app.use('/api', passengerRoute)
 app.use('/api', driverRoute)
 app.use('/api', driveRoute)
 
-app.post('/test', (req, res) => {console.log(req.body)})
+//app.post('/test', (req, res) => {console.log(req.body)})
 
 
 app.listen(PORT, () => {

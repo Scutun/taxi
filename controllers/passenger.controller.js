@@ -10,7 +10,7 @@ class passengerController{
             const {firstName, email, password} = req.body
             const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
             const newPassenger = await db.query(`INSERT INTO passengers (passenger_firstname, 
-                passenger_email, password) values ($1, $2, $3) RETURNING id_passengers`, [firstName, email, hash])
+                passenger_email, password) values ($1, $2, $3) RETURNING id_passengers as id`, [firstName, email, hash])
 
             res.json(newPassenger.rows[0])
         }
@@ -79,7 +79,7 @@ class passengerController{
             res.json(passenger.rows[0])
         }
         catch(e){
-            res.sendStatus(404)
+            res.sendStatus(400)
         }
     }
 

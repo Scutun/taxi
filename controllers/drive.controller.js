@@ -27,9 +27,11 @@ class driveController{
         try{
             const id = req.params.id
 
-            const drive =  await db.query(`select start_point, end_point, cost, driver.driver_surname, driver.driver_firstname from drive
+            const drive =  await db.query(`select id_drive, start_point, end_point, cost, driver.driver_surname, driver.driver_firstname from drive
             join driver on drive.id_driver_fk = driver.id_driver
-            where drive.id_drive = $1`, [id])
+            where drive.id_passengers_fk = $1 and drive.id_status_fk < 3`, [id])
+
+            if(drive.rows[0].length === 0) throw new Error
 
             res.json(drive.rows[0])
         }
@@ -42,11 +44,13 @@ class driveController{
         try{
             const id = req.params.id
 
-            const drive =  await db.query(`select drive.start_point, drive.end_point, drive.cost, driver.driver_surname, driver.driver_firstname, status.status_name
-            from drive
+            const drive =  await db.query(`select drive.id_drive, drive.start_point, drive.end_point, drive.cost, 
+            driver.driver_surname, driver.driver_firstname, status.status_name from drive
             join driver on drive.id_driver_fk = driver.id_driver
             join status on drive.id_status_fk = status.id_status
-            where drive.id_passengers_fk = $1`, [id])
+            where drive.id_passengers_fk = $1 and drive.id_status_fk > 2`, [id])
+
+            if(drive.rows[0].length === 0) throw new Error
 
             res.json(drive.rows)
         }
@@ -72,7 +76,7 @@ class driveController{
     }
 
     async updateStatusFinish(req, res){
-        const id = parseInt(req.body.id);
+        const id = Number(req.body.id);
         const status = await db.query(`update drive set id_status_fk = 3 where id_drive = $1`, [id])
         res.json(req.body.id)
     }
@@ -90,7 +94,7 @@ class driveController{
             res.json(drive.rows[0])
         }
         catch(e){
-            res.sendStatus(404)
+            res.sendStatus(400)
         }
     }
 
@@ -102,7 +106,7 @@ class driveController{
 
             const drive = await db.query(`update drive set id_status_fk = 4 where id_drive = '${id}'`)
 
-            res.json(id)
+            res.json(200)
         }
         catch(e){
             res.sendStatus(404)
