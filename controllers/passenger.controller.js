@@ -53,7 +53,7 @@ class passengerController{
     async getPassenger(req, res){
         try{
             const id = req.params.id
-            const passenger = await db.query(`select passenger_surname, passenger_firstname, passenger_secondname, bonus_count
+            const passenger = await db.query(`select passenger_surname as surname, passenger_firstname as firstName, passenger_secondname as secondName, bonus_count
             from passengers where id_passengers = $1`, [id])
 
             if(passenger.rows.length === 0) throw new Error
