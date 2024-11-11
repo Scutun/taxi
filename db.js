@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   host: process.env.dbHost,
   user: process.env.dbUser,
   password: process.env.dbPassword,
-  multipleStatements: true,
+  multipleStatements: true, //для выполнения нескольких SQL-запросов
 })
 
 // Путь к файлу database.sql
@@ -39,5 +39,4 @@ fs.readFile(sqlFilePath, 'utf-8', (err, sqlQuery) => {
   })
 })
 
-// Экспортируем подключение для использования в других файлах
 module.exports = connection

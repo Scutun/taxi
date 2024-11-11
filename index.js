@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./db')
 
 const express = require('express')
 const app = express()
@@ -8,7 +9,6 @@ const driverRoute = require('./routes/driver.routes')
 const driveRoute = require('./routes/drive.routes')
 
 app.use(express.json())
-const PORT = process.env.port || 3000
 app.use(cors())
 app.use('/api', passengerRoute)
 app.use('/api', driverRoute)
