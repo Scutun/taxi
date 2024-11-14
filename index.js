@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./creationDB')
 require('./db')
 
 const express = require('express')

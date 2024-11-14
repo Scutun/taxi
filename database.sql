@@ -35,19 +35,6 @@ CREATE TABLE if not exists status (
     name VARCHAR(100)
 );
 
-CREATE TABLE if not exists drive (
-    driveId BIGINT PRIMARY KEY AUTO_INCREMENT,
-    cost BIGINT,
-    id_driver_fk BIGINT default 1,
-    id_passengers_fk BIGINT not null,
-    startPoint VARCHAR(100) not null,
-    endPoint VARCHAR(100) not null,
-    id_status_fk BIGINT,
-    FOREIGN KEY (id_driver_fk) REFERENCES driver(driverId),
-    FOREIGN KEY (id_passengers_fk) REFERENCES passengers(passengerId),
-    FOREIGN KEY (id_status_fk) REFERENCES status(id)
-);
-
 INSERT INTO status (name)
 SELECT * FROM (SELECT 'Ищем водителя') AS tmp
 WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Ищем водителя')
@@ -67,5 +54,20 @@ INSERT INTO status (name)
 SELECT * FROM (SELECT 'Поездка отменена') AS tmp
 WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Поездка отменена')
 LIMIT 1;
+
+CREATE TABLE if not exists drive (
+    driveId BIGINT PRIMARY KEY AUTO_INCREMENT,
+    cost BIGINT,
+    id_driver_fk BIGINT default 1,
+    id_passengers_fk BIGINT,
+    startPoint VARCHAR(100) not null,
+    endPoint VARCHAR(100) not null,
+    id_status_fk BIGINT default 1,
+    FOREIGN KEY (id_driver_fk) REFERENCES driver(driverId),
+    FOREIGN KEY (id_passengers_fk) REFERENCES passengers(passengerId),
+    FOREIGN KEY (id_status_fk) REFERENCES status(id)
+);
+
+
 
 

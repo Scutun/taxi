@@ -1,7 +1,5 @@
 const express = require('express')
 const control = express()
-const db = require('../db')
-const bcrypt = require('bcrypt')
 const model = require('../models/passenger.model')
 
 class passengerController {
@@ -30,12 +28,9 @@ class passengerController {
 
   async getPassengerFromDrive(req, res) {
     try {
-      const id = await db.query(`select id_passengers_fk 
-            from drive where id_drive = '${req.params.id}'`)
-      const passenger = await db.query(`select passenger_surname, passenger_firstname, passenger_secondname
-            from passengers where id_passengers = '${id.rows[0].id_passengers_fk}'`)
+      const info = await model.getPassengerByDrive(req.params.id)
 
-      res.json(passenger.rows[0])
+      res.json({ info: info })
     } catch (e) {
       res.sendStatus(404)
     }
@@ -43,16 +38,9 @@ class passengerController {
 
   async getPassenger(req, res) {
     try {
-      const id = req.params.id
-      const passenger = await db.query(
-        `select passenger_surname as surname, passenger_firstname as firstName, passenger_secondname as secondName, bonus_count
-            from passengers where id_passengers = $1`,
-        [id]
-      )
+      const info = await model.getPassengerById(req.params.id)
 
-      if (passenger.rows.length === 0) throw new Error()
-
-      res.json(passenger.rows[0])
+      res.json({ info: info })
     } catch (e) {
       res.sendStatus(404)
     }
@@ -60,19 +48,9 @@ class passengerController {
 
   async updatePassenger(req, res) {
     try {
-      const { surname, firstName, secondName, id } = req.body
+      const info = await model.passengerUpdate(req.body)
 
-      const info = await db.query(`select * from passengers where id_passengers = $1`, [id])
-
-      if (info.rows.length === 0) throw new Error()
-
-      const passenger = await db.query(
-        `update passengers set passenger_surname = $1, passenger_firstname = $2, 
-            passenger_secondname = $3 where id_passengers = $4 returning *`,
-        [surname, firstName, secondName, id]
-      )
-
-      res.json(passenger.rows[0])
+      res.json({ info: info })
     } catch (e) {
       res.sendStatus(400)
     }
@@ -80,17 +58,9 @@ class passengerController {
 
   async deletePassenger(req, res) {
     try {
-      const info = await db.query(`select * from passengers where id_passengers = '${req.params.id}'`)
+      const deletion = await model.passengerDeletiot(req.params.id)
 
-      if (info.rows.length === 0) throw new Error()
-
-      const drive = await db.query(`UPDATE drive SET id_passengers_fk = null 
-            WHERE id_passengers_fk = '${req.params.id}'`)
-
-      const passenger = await db.query(`delete from passengers 
-            where id_passengers = '${req.params.id}'`)
-
-      res.json(req.params.id)
+      res.json({ id: deletion })
     } catch (e) {
       res.sendStatus(404)
     }

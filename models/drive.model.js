@@ -1,20 +1,22 @@
 const express = require('express')
 const control = express()
 const db = require('../db')
-const bcrypt = require('bcrypt')
 
 class driveModel {
   async newDrive(info) {
     try {
-      console.log(info)
-      const allow = await db.query(`select count(id_status_fk) as counter from drive where id_status_fk < 3 and id_passengers_fk = '${info.id}'`)
+      const [allow] = await db.query(`select count(id_status_fk) as counter from drive where id_status_fk < 3 and id_passengers_fk = ?`, [info.id])
 
-      if (allow[0].counter !== '0') throw new Error()
+      console.log(typeof allow[0].counter)
+      if (allow[0].counter !== 0) throw new Error()
 
-      const newDrive = await db.query(
+      await db.query(
         `insert into drive (startPoint, endPoint, cost, id_passengers_fk)
-            values ('${info.startPoint}', '${info.endPoint}', '${info.cost}', '${info.id_passengers_fk}') returning driveId`
+            values (?, ?, ?, ?)`,
+        [info.start, info.end, info.cost, info.id]
       )
+
+      const [newDrive] = await db.query(`select LAST_INSERT_ID() as id from drive`)
 
       return newDrive[0]
     } catch (e) {
