@@ -2,6 +2,7 @@ const express = require('express')
 const control = express()
 const db = require('../db')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 class modelPassenger {
   async newPassenger(info) {
@@ -25,7 +26,21 @@ class modelPassenger {
 
   async logInPassenger(info) {
     try {
+      const [datas] = await db.query(
+        `select passengerId as id, passengerEmail as email, passengerPassword as password 
+        from passengers where passengerEmail = ?`,
+        [info.email]
+      )
+      if (datas[0].length === 0) {
+        throw new Error()
+      }
+      if (!bcrypt.compareSync(info.password, datas[0].password)) {
+        throw new Error()
+      }
+      const token = jwt.sign({ email: info.email }, process.env.ACCESS_TOKEN_SECRET)
+      return token
     } catch (e) {
+      console.log(e)
       throw new Error()
     }
   }

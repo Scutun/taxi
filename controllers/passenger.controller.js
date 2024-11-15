@@ -14,15 +14,10 @@ class passengerController {
 
   async logPassenger(req, res) {
     try {
-      const { email, password } = req.body
-      const data = await db.query(`select * from passengers where passenger_email = '${email}'`)
-      if (data.rows.length === 0) throw new Error('Empty')
-
-      if (!bcrypt.compareSync(password, data.rows[0].password)) throw new Error('Password')
-
-      res.json({ id: data.rows[0].id_passengers })
+      const allow = await model.logInPassenger(req.body)
+      res.json({ allow: allow })
     } catch (e) {
-      res.sendStatus(404)
+      res.sendStatus(403)
     }
   }
 
