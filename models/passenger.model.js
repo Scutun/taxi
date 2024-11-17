@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const control = express()
 const db = require('../db')
@@ -15,11 +16,11 @@ class modelPassenger {
         [info.firstName, info.email, hash]
       )
 
-      const [result] = await db.query(`SELECT * from passengers WHERE passengerId = LAST_INSERT_ID()`)
+      const [result] = await db.query(`SELECT passengerSurname as surname, passengerFirstname as firstName, 
+        passengerSecondname as secondName, bonusCount as bonus, passengerEmail as email from passengers WHERE passengerId = LAST_INSERT_ID()`)
 
       return result[0]
     } catch (e) {
-      console.log(e)
       throw new Error()
     }
   }
@@ -37,15 +38,20 @@ class modelPassenger {
       if (!bcrypt.compareSync(info.password, datas[0].password)) {
         throw new Error()
       }
-      const token = jwt.sign({ email: info.email }, process.env.ACCESS_TOKEN_SECRET)
+      const token = jwt.sign({ id: datas[0].id }, process.env.ACCESS_TOKEN_SECRET)
       return token
     } catch (e) {
-      console.log(e)
       throw new Error()
     }
   }
-  async getPassengerById(id) {
+  async getPassengerById(token) {
     try {
+      const authHeaders = token && token.split(' ')[1];
+
+      const decodedToken = jwt.verify(authHeaders, process.env.ACCESS_TOKEN_SECRET);
+      const id = decodedToken.id;
+      
+
       const [passenger] = await db.query(
         `select passengerSurname as surname, passengerFirstname as firstName, passengerSecondname as secondName, bonusCount as bonus
             from passengers where passengerId = ?`,
@@ -74,22 +80,28 @@ class modelPassenger {
     }
   }
 
-  async passengerUpdate(info) {
+  async passengerUpdate(token, info) {
     try {
-      const [oldInfo] = await db.query(`select * from passengers where passengerId = ?`, [info.id])
+
+      const authHeaders = token && token.split(' ')[1];
+
+      const decodedToken = jwt.verify(authHeaders, process.env.ACCESS_TOKEN_SECRET);
+      const id = decodedToken.id;
+
+      const [oldInfo] = await db.query(`select * from passengers where passengerId = ?`, [id])
 
       if (oldInfo[0].length === 0) throw new Error()
 
       await db.query(
         `update passengers set passengerSurname = ?, passengerFirstname = ?, 
             passengerSecondname = ? where passengerId = ?`,
-        [info.surname, info.firstName, info.secondName, info.id]
+        [info.surname, info.firstName, info.secondName, id]
       )
 
       const [newInfo] = await db.query(
         `select passengerSurname as surname, passengerFirstname as firstName, 
-        passengerSecondname as secondName, passengerId as id from passengers where passengerId = ?`,
-        [info.id]
+        passengerSecondname as secondName from passengers where passengerId = ?`,
+        [id]
       )
 
       return newInfo[0]
@@ -98,8 +110,14 @@ class modelPassenger {
     }
   }
 
-  async passengerDeletiot(id) {
+  async passengerDeletiot(token) {
     try {
+
+      const authHeaders = token && token.split(' ')[1];
+
+      const decodedToken = jwt.verify(authHeaders, process.env.ACCESS_TOKEN_SECRET);
+      const id = decodedToken.id;
+
       const [info] = await db.query(`select * from passengers where passengerId = ?`, [id])
 
       if (info[0].length === 0) throw new Error()
@@ -118,7 +136,6 @@ class modelPassenger {
 
       return id
     } catch (e) {
-      console.log(e)
       throw new Error()
     }
   }

@@ -10,7 +10,8 @@ CREATE TABLE if not exists driver (
     driverPassword VARCHAR(100) not null,
     driverFirstname VARCHAR(100) not null,
     driverSecondname VARCHAR(100),
-    driverEmail VARCHAR(100)
+    driverEmail VARCHAR(100),
+    UNIQUE (driverEmail)
 );
 
 -- Дефолт значения для водителя
@@ -27,7 +28,8 @@ CREATE TABLE if not exists passengers (
     passengerFirstname VARCHAR(100) not null,
     passengerSecondname VARCHAR(100),
     bonusCount BIGINT default 0,
-    passengerEmail VARCHAR(100)
+    passengerEmail VARCHAR(100),
+    UNIQUE (passengerEmail)
 );
 
 CREATE TABLE if not exists status (

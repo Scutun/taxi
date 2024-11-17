@@ -10,8 +10,9 @@ router.post('/logIn', passengerController.logPassenger)
 router.post('/create', passengerController.createPassenger)
 router.put('/passenger/update', passengerController.updatePassenger)
 
-router.delete('/passenger/delete/:id', passengerController.deletePassenger)
-router.get('/passenger/:id', passengerController.getPassenger)
+router.get('/passenger', passengerController.getPassenger)
+
+router.delete('/passenger/delete', passengerController.deletePassenger)
 router.get('/passenger/find/:id', passengerController.getPassengerFromDrive)
 
 module.exports = router

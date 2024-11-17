@@ -33,7 +33,8 @@ class passengerController {
 
   async getPassenger(req, res) {
     try {
-      const info = await model.getPassengerById(req.params.id)
+
+      const info = await model.getPassengerById(req.headers.authorization)
 
       res.json({ info: info })
     } catch (e) {
@@ -43,7 +44,7 @@ class passengerController {
 
   async updatePassenger(req, res) {
     try {
-      const info = await model.passengerUpdate(req.body)
+      const info = await model.passengerUpdate(req.headers.authorization, req.body)
 
       res.json({ info: info })
     } catch (e) {
@@ -53,7 +54,7 @@ class passengerController {
 
   async deletePassenger(req, res) {
     try {
-      const deletion = await model.passengerDeletiot(req.params.id)
+      const deletion = await model.passengerDeletiot(req.headers.authorization)
 
       res.json({ id: deletion })
     } catch (e) {
