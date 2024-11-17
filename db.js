@@ -1,5 +1,5 @@
-require('dotenv').config()
-const mysql = require('mysql2')
+require("dotenv").config()
+const mysql = require("mysql2")
 
 // После выполнения запросов подключаемся к базе данных taxi
 const pool = mysql

@@ -1,6 +1,6 @@
-const express = require('express')
+const express = require("express")
 const control = express()
-const model = require('../models/passenger.model')
+const model = require("../models/passenger.model")
 
 class passengerController {
   async createPassenger(req, res) {
@@ -33,7 +33,6 @@ class passengerController {
 
   async getPassenger(req, res) {
     try {
-
       const info = await model.getPassengerById(req.headers.authorization)
 
       res.json({ info: info })
