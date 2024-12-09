@@ -15,7 +15,7 @@ class passengerController {
 	async logPassenger(req, res) {
 		try {
 			const allow = await model.logInPassenger(req.body)
-			res.json(allow)
+			res.json({ token: allow })
 		} catch (e) {
 			res.sendStatus(403)
 		}
