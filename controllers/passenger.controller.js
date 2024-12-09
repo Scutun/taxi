@@ -55,7 +55,7 @@ class passengerController {
 		try {
 			const deletion = await model.passengerDeletiot(req.headers.authorization)
 
-			res.json(deletion)
+			res.json({ id: deletion })
 		} catch (e) {
 			res.sendStatus(404)
 		}
