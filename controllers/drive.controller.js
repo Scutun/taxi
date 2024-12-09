@@ -7,7 +7,7 @@ class driveController {
 	async createDrive(req, res) {
 		try {
 			const newDrive = await model.newDrive(req.headers.authorization, req.body)
-			res.json({ id: newDrive })
+			res.json(newDrive)
 		} catch (e) {
 			res.sendStatus(400)
 		}
@@ -17,7 +17,7 @@ class driveController {
 		try {
 			const drive = await model.getCurrentDrive(req.headers.authorization)
 
-			res.json({ info: drive })
+			res.json(drive)
 		} catch (e) {
 			res.sendStatus(404)
 		}
@@ -27,7 +27,7 @@ class driveController {
 		try {
 			const drives = await model.getAllDrives(req.headers.authorization)
 
-			res.json({ info: drives })
+			res.json(drives)
 		} catch (e) {
 			res.sendStatus(404)
 		}
@@ -37,7 +37,7 @@ class driveController {
 		try {
 			const drive = await model.updateStatusStarted(req.body)
 
-			res.json({ id: drive })
+			res.json(drive)
 		} catch (e) {
 			res.sendStatus(400)
 		}
@@ -47,7 +47,7 @@ class driveController {
 		try {
 			const drive = await model.updateStatusFinished(req.body)
 
-			res.json({ id: drive })
+			res.json(drive)
 		} catch (e) {
 			res.sendStatus(400)
 		}
@@ -57,7 +57,7 @@ class driveController {
 		try {
 			const drive = await model.updateStatusCanceled(req.body)
 
-			res.json({ id: drive })
+			res.json(drive)
 		} catch (e) {
 			res.sendStatus(400)
 		}
@@ -67,7 +67,7 @@ class driveController {
 		try {
 			const drive = await model.updatedDrive(req.body)
 
-			res.json({ info: drive })
+			res.json(drive)
 		} catch (e) {
 			res.sendStatus(400)
 		}
