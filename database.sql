@@ -16,9 +16,9 @@ CREATE TABLE if not exists driver (
 
 -- Дефолт значения для водителя
 INSERT INTO driver (driverSurname, driverPassword, driverFirstname, driverEmail, driverExperience)
-SELECT 'Нет информации', '------', 'Нет информации', '-----', 0
+SELECT 'No information', '------', 'No information', '-----', 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM driver WHERE driverSurname = 'Нет информации'
+    SELECT 1 FROM driver WHERE driverSurname = 'No information'
 );
 
 CREATE TABLE if not exists passengers (
@@ -38,23 +38,23 @@ CREATE TABLE if not exists status (
 );
 
 INSERT INTO status (name)
-SELECT * FROM (SELECT 'Ищем водителя') AS tmp
-WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Ищем водителя')
+SELECT * FROM (SELECT 'Search for a driver') AS tmp
+WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Search for a driver')
 LIMIT 1;
 
 INSERT INTO status (name)
-SELECT * FROM (SELECT 'Водитель найден') AS tmp
-WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Водитель найден')
+SELECT * FROM (SELECT 'Driver not found') AS tmp
+WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Driver not found')
 LIMIT 1;
 
 INSERT INTO status (name)
-SELECT * FROM (SELECT 'Поездка завершена') AS tmp
-WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Поездка завершена')
+SELECT * FROM (SELECT 'Drive completed') AS tmp
+WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Drive completed')
 LIMIT 1;
 
 INSERT INTO status (name)
-SELECT * FROM (SELECT 'Поездка отменена') AS tmp
-WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Поездка отменена')
+SELECT * FROM (SELECT 'Drive is canselled') AS tmp
+WHERE NOT EXISTS (SELECT name FROM status WHERE name = 'Drive is canselled')
 LIMIT 1;
 
 CREATE TABLE if not exists drive (
